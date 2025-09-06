@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Ponte delle Stelle</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(to top, #000814, #1a1a2e);
+      overflow: hidden;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: white;
+    }
+
+    #game {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+    }
+
+    .heart {
+      font-size: 3.5rem;
+      position: absolute;
+      bottom: 40%;
+      left: 5%;
+      transition: left 0.6s ease;
+      z-index: 2;
+    }
+
+    .star {
+      position: absolute;
+      font-size: 2rem;
+      color: gold;
+      text-shadow: 0 0 10px #fff, 0 0 20px gold;
+      animation: twinkle 1s infinite alternate;
+    }
+
+    @keyframes twinkle {
+      from { opacity: 0.6; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1.2); }
+    }
+
+    #message {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2rem;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      color: #ff99cc;
+      text-shadow: 0 0 12px #fff, 0 0 24px pink;
+      z-index: 3;
+    }
+
+    .shooting-star {
+      position: absolute;
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(90deg, white, transparent);
+      animation: shoot 2s linear forwards;
+    }
+
+    @keyframes shoot {
+      from { transform: translate(-100px, -100px); opacity: 1; }
+      to { transform: translate(500px, 300px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <div class="heart" id="heart">💖</div>
+    <div id="message">Ti ho aspettata qui, Bea 💕</div>
+  </div>
+
+  <script>
+    const heart = document.getElementById("heart");
+    const message = document.getElementById("message");
+    const game = document.getElementById("game");
+    let step = 0;
+    const maxSteps = 10;
+
+    game.addEventListener("click", buildBridge);
+    game.addEventListener("touchstart", buildBridge);
+
+    function buildBridge() {
+      if (step >= maxSteps) return;
+
+      step++;
+      const star = document.createElement("div");
+      star.classList.add("star");
+      star.textContent = "⭐";
+      
+      // posizioniamo le stelle in riga per creare il ponte
+      star.style.left = (10 + step * 8) + "%";
+      star.style.bottom = "35%";
+      game.appendChild(star);
+
+      // il cuore segue il ponte
+      heart.style.left = (10 + step * 8) + "%";
+
+      if (step === maxSteps) {
+        setTimeout(() => finishGame(), 800);
+      }
+    }
+
+    function finishGame() {
+      heart.textContent = "😊❤️";
+      heart.style.transform = "scale(1.3)";
+      message.style.opacity = 1;
+      shootingStars();
+    }
+
+    function shootingStars() {
+      for (let i = 0; i < 12; i++) {
+        const s = document.createElement("div");
+        s.classList.add("shooting-star");
+        s.style.top = Math.random() * window.innerHeight / 2 + "px";
+        s.style.left = Math.random() * window.innerWidth / 2 + "px";
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 2000);
+      }
+    }
+  </script>
+</body>
+</html>
